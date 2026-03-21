@@ -1,6 +1,30 @@
 
 @./summary.CLAUDE.md
 
+# Coding Conventions
+
+## Tests
+Every non-trivial addition (new function, class, or meaningful logic) must include a corresponding test case in `tests/`. Bare assertions are fine — test the behavior, not the implementation.
+
+## Type Hints
+All Python code must have type hints on function signatures (parameters and return types). Use `-> None` for functions that return nothing.
+
+## uv Tips (for pip/venv users)
+uv is a fast drop-in replacement for pip + venv. Key equivalents:
+
+| pip/venv | uv equivalent | Notes |
+|---|---|---|
+| `python -m venv .venv` | `uv venv` | Creates `.venv` in current dir |
+| `source .venv/bin/activate` | not needed | uv auto-uses `.venv` |
+| `pip install -e ".[dev]"` | `uv pip install -e ".[dev]"` | Same flags, much faster |
+| `pip install foo` | `uv pip install foo` | Same |
+| `pip freeze` | `uv pip freeze` | Same |
+| *(no equivalent)* | `uv sync` | Install all deps from `pyproject.toml` + creates venv if missing |
+
+- `.venv/` is created automatically by `uv sync` or `uv pip install` if it doesn't exist — no need to run `uv venv` first in most cases.
+- `uv` does **not** require activating the venv; it finds and uses `.venv` automatically.
+- To run a script in the venv without activating: `uv run python myscript.py` or `uv run pytest`.
+
 # proton-mail-mcp Planning Conversation
 
 ## Proton Mail MCP — Install Command?

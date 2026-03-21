@@ -1,0 +1,18 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+.venv/
+.env
+
+# Tox / pytest
+.tox/
+.pytest_cache/
+htmlcov/
+.coverage
+
+# Editor
+.DS_Store
+.vscode/
