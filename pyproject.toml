@@ -18,6 +18,7 @@ dev = [
     "pytest",
     "ruff",
     "tox",
+    "tox-uv",
 ]
 
 [project.scripts]
