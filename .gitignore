@@ -16,3 +16,6 @@ htmlcov/
 # Editor
 .DS_Store
 .vscode/
+
+# Claude Code
+.claude/settings.local.json
