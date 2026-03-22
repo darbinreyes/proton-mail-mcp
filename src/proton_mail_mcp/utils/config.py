@@ -18,7 +18,7 @@ class BridgeConfig:
 def load_bridge_config() -> BridgeConfig:
     return BridgeConfig(
         host=os.getenv("BRIDGE_HOST", "127.0.0.1"),
-        imap_port=int(os.getenv("BRIDGE_IMAP_PORT", "1143")),
+        imap_port=int(os.getenv("BRIDGE_IMAP_PORT", "1143")), # These ports are Proton Mail specific.
         smtp_port=int(os.getenv("BRIDGE_SMTP_PORT", "1025")),
         user=os.environ["BRIDGE_USER"],
         password=os.environ["BRIDGE_PASSWORD"],
