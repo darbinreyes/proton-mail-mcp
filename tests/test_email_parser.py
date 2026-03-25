@@ -10,7 +10,7 @@ def make_plaintext_email() -> bytes:
     msg = MIMEText("Hello,\n\nThis is a plain text email body.\n\nRegards,\nAlice", "plain")
     msg["Subject"] = "Plain text test"
     msg["From"] = "alice@proton.me"
-    msg["Date"] = "Mon, 17 Mar 2026 10:00:00 +0000"
+    msg["Date"] = "Tue, 17 Mar 2026 10:00:00 +0000"
     return msg.as_bytes()
 
 
@@ -47,7 +47,7 @@ def test_parse_plaintext_email_headers() -> None:
     summary = parse_email(make_plaintext_email())
     assert summary.subject == "Plain text test"
     assert summary.sender == "alice@proton.me"
-    assert summary.date == "Mon, 17 Mar 2026 10:00:00 +0000"
+    assert summary.date == "Tue, 17 Mar 2026 10:00:00 +0000"
 
 
 def test_parse_plaintext_email_snippet() -> None:

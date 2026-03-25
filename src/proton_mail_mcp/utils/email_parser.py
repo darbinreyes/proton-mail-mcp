@@ -1,4 +1,5 @@
 import email
+import email.policy
 from dataclasses import dataclass
 from email.message import Message
 
@@ -28,9 +29,23 @@ def parse_html_body(html: str) -> str:
 def extract_text_snippet(msg: Message, max_chars: int = 200) -> str:
     """Extract a plain text snippet from a MIME email message.
 
-    Walks the MIME tree preferring text/plain, falling back to text/html
-    (parsed via BeautifulSoup). Returns "[no text content]" if neither is found.
+    Uses the modern email.policy.default API (Python 3.6+): EmailMessage.get_body()
+    searches the MIME tree and returns the best matching part directly, handling
+    multipart/alternative preference logic internally.
+
+    Falls back to manual walk() for messages parsed without the modern policy
+    (e.g. already-parsed Message objects passed in directly).
     """
+    # Modern path: EmailMessage with policy.default exposes get_body()
+    if hasattr(msg, "get_body"):
+        part = msg.get_body(preferencelist=("plain", "html"))
+        if part is not None:
+            content = part.get_content()  # decoded str, charset-aware
+            if part.get_content_type() == "text/html":
+                content = parse_html_body(content)
+            return content.strip()[:max_chars]
+
+    # Fallback: legacy Message object — walk manually
     plain: str | None = None
     html_fallback: str | None = None
 
@@ -48,8 +63,12 @@ def extract_text_snippet(msg: Message, max_chars: int = 200) -> str:
 
 
 def parse_email(raw: bytes) -> EmailSummary:
-    """Parse a raw RFC822 email into an EmailSummary."""
-    msg = email.message_from_bytes(raw)
+    """Parse a raw RFC822 email into an EmailSummary.
+
+    Uses email.policy.default (modern API) so the returned object is an
+    EmailMessage with get_body(), get_content(), etc. available.
+    """
+    msg = email.message_from_bytes(raw, policy=email.policy.default)
     return EmailSummary(
         subject=msg.get("Subject", "(no subject)"),
         sender=msg.get("From", "(unknown)"),
